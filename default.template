@@ -1,11 +1,17 @@
-# default server block to handle undefined domain names
 server {
-  listen 80 default_server;
   server_name _;
-  return 403;
+
+  #allow health checks to enable aws elb
+  location = /health {
+    add_header Content-Type text/plain;
+    return 200 'OK';
+  }
+
+  location / {
+    return 403;
+  }
 }
 
-# server block for static file serving
 server {
   listen 80;
   server_name ${SERVER_NAMES};
